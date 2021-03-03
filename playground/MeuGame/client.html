@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supervisorio</title>
+    
     <style>
         #screen {
             margin-top: 10px;
@@ -12,6 +13,7 @@
             border-color: blue;
         }
     </style>
+
 </head>
 <body>
     <canvas id="screen" width="1300" height="550"></canvas>
@@ -22,42 +24,61 @@
         const context = screen.getContext('2d')
         const CurrentPlayer = 'player1'
 
-        const objetos = {
-            players:{
-                'player1': {x: 10, y: 30},
-                'player2': {x: 30, y: 50}
-            },
-            fruits: {
-                'fruta1': {x: 100, y: 120}
-            }        
+        function createGame() {
+
+            const objetos = {
+                players:{
+                    'player1': {x: 10, y: 30},
+                    'player2': {x: 30, y: 50}
+                },
+                fruits: {
+                    'fruta1': {x: 100, y: 120},
+                    'fruta2': {x: 150, y: 200}
+                }        
+            }
+
+            function movePlayer(command) {
+                console.log(`Moving ${command.playerId} with ${command.teclado}`)
+                const keyPressed = command.teclado
+                const player = objetos.players[command.playerId]
+
+                if(keyPressed === 'ArrowUp' && player.y > 0){
+                    player.y = player.y - 10
+                    return
+                }
+                if(keyPressed === 'ArrowDown' && player.y < height - 10){
+                    player.y = player.y + 10
+                    return
+                }
+                if(keyPressed === 'ArrowLeft' && player.x > 0){
+                    player.x = player.x - 10
+                    return
+                }
+                if(keyPressed === 'ArrowRight' && player.x < width - 10){
+                    player.x = player.x + 10
+                    return
+                }
+            }
+
+            return {
+                movePlayer,
+                objetos
+            }
         }
+
+        const game = createGame()
 
         document.addEventListener('keydown', handleKeydown)
 
         function handleKeydown(event) {
-            
+
             const teclado = event.key
-            const player = objetos.players[CurrentPlayer]
-
-            if(teclado === 'ArrowUp'){
-                player.y = player.y - 10
-                return
+            const command = {
+                playerId: 'player1',
+                teclado
             }
 
-            if(teclado === 'ArrowDown'){
-                player.y = player.y + 10
-                return
-            }
-
-            if(teclado === 'ArrowLeft'){
-                player.x = player.x - 10
-                return
-            }
-            if(teclado === 'ArrowRight'){
-                player.x = player.x + 10
-                return
-            }
-
+            game.movePlayer(command)
         }
                
         const color = '#a59f9f'
@@ -73,10 +94,16 @@
             context.fillStyle = color
             context.fillRect(posicaoX, posicaoY, width, height)
 
-            for(const playersId in objetos.players){
-                const player = objetos.players[playersId]
+            for(const playersId in game.objetos.players){
+                const player = game.objetos.players[playersId]
                 context.fillStyle = 'black'
                 context.fillRect(player.x, player.y, 10, 10)
+            }
+
+            for(const fruitsId in game.objetos.fruits) {
+                const fruit = game.objetos.fruits[fruitsId]
+                context.fillStyle = 'red'
+                context.fillRect(fruit.x, fruit.y, 10, 10)
             }
 
             requestAnimationFrame(renderizar)
