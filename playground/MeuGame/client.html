@@ -23,6 +23,14 @@
         const screen = document.getElementById('screen')
         const context = screen.getContext('2d')
         const CurrentPlayer = 'player1'
+        const color = '#a59f9f'
+        const posicaoX = 0
+        const posicaoY = 0
+        const width = 1300
+        const height = 550
+        const game = createGame()
+        const keyboardlistener = createKeyboardLitener()
+        renderizar()
 
         function createGame() {
 
@@ -66,28 +74,19 @@
             }
         }
 
-        const game = createGame()
+        function createKeyboardLitener(){
+            document.addEventListener('keydown', handleKeydown)
 
-        document.addEventListener('keydown', handleKeydown)
-
-        function handleKeydown(event) {
-
-            const teclado = event.key
-            const command = {
-                playerId: 'player1',
-                teclado
+            function handleKeydown(event) {
+                const teclado = event.key
+                const command = {
+                    playerId: 'player1',
+                    teclado
+                }
+                game.movePlayer(command)
             }
-
-            game.movePlayer(command)
         }
-               
-        const color = '#a59f9f'
-        const posicaoX = 0
-        const posicaoY = 0
-        const width = 1300
-        const height = 550
-
-        renderizar()
+        
 
         function renderizar() {
 
