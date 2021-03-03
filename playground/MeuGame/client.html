@@ -20,6 +20,7 @@
 
         const screen = document.getElementById('screen')
         const context = screen.getContext('2d')
+        const CurrentPlayer = 'player1'
 
         const objetos = {
             players:{
@@ -30,7 +31,35 @@
                 'fruta1': {x: 100, y: 120}
             }        
         }
-                
+
+        document.addEventListener('keydown', handleKeydown)
+
+        function handleKeydown(event) {
+            
+            const teclado = event.key
+            const player = objetos.players[CurrentPlayer]
+
+            if(teclado === 'ArrowUp'){
+                player.y = player.y - 10
+                return
+            }
+
+            if(teclado === 'ArrowDown'){
+                player.y = player.y + 10
+                return
+            }
+
+            if(teclado === 'ArrowLeft'){
+                player.x = player.x - 10
+                return
+            }
+            if(teclado === 'ArrowRight'){
+                player.x = player.x + 10
+                return
+            }
+
+        }
+               
         const color = '#a59f9f'
         const posicaoX = 0
         const posicaoY = 0
@@ -40,10 +69,11 @@
         renderizar()
 
         function renderizar() {
+
             context.fillStyle = color
             context.fillRect(posicaoX, posicaoY, width, height)
 
-            for(playersId in objetos.players){
+            for(const playersId in objetos.players){
                 const player = objetos.players[playersId]
                 context.fillStyle = 'black'
                 context.fillRect(player.x, player.y, 10, 10)
