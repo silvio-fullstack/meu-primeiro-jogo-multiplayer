@@ -1,4 +1,4 @@
-export default function createKeyboardLitener(){
+export default function createKeyboardLitener(document){
             document.addEventListener('keydown', handleKeydown)
 
             const state = {

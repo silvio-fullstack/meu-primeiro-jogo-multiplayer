@@ -20,149 +20,24 @@
 
     <script type="module">
 
+        import createGame from './game.js'
         import createKeyboardLitener from './keyboard-listener.js'
+        import renderizar from './render-screen.js'
+        
 
         const screen = document.getElementById('screen')
-        const context = screen.getContext('2d')
         
-        const color = '#a59f9f'
         const posicaoX = 0
         const posicaoY = 0
         const width = 1300
         const height = 550
         const game = createGame()
-        const keyboardlistener = createKeyboardLitener()
+        const keyboardlistener = createKeyboardLitener(document)
         keyboardlistener.subscribe(game.movePlayer)
         const CurrentPlayer = 'player'
-        renderizar()
-
-        function createGame() {
-
-            const objetos = {
-                players:{},
-                fruits: {}        
-            }
-
-            function addPlayer(command) {
-                const playerId = command.playerId
-                const playerx = command.playerx
-                const playery = command.playery
-
-                objetos.players[playerId] = {
-                    x: playerx,
-                    y: playery
-                }
-            }
-
-            function deletePlayer(command) {
-                const playerId = command.playerId
-
-                delete objetos.players[playerId]
-            }
-
-            function addFruits(command) {
-                const fruitId = command.fruitId
-                const fruitx = command.fruitx
-                const fruity = command.fruity
-
-                objetos.fruits[fruitId] = {
-                    x: fruitx,
-                    y: fruity
-                }
-            }
-
-            function deletefruit(command) {
-                const fruitId = command.fruitId
-
-                delete objetos.fruits[fruitId]
-            }
-
-            function movePlayer(command) {
-                const keyPressed = command.teclado
-                const player = objetos.players[command.playerId]
-                
-                const acceptMove = {
-                    ArrowUp(player) {
-                        if (player.y > 0) {
-                            player.y = player.y - 10
-                            return
-                        }
-                    },
-                    ArrowDown(player) {
-                        if (player.y < height - 10){
-                            player.y = player.y + 10
-                            return
-                        }
-                    },
-                    ArrowLeft(player) {
-                        if (player.x > 0) {
-                            player.x = player.x - 10
-                            return
-                        }
-                    },
-                    ArrowRight(player) {
-                        if (player.x < width - 10) {
-                            player.x = player.x + 10
-                            return
-                        }
-                    }
-                }
-                const moveFunction = acceptMove[keyPressed]
-                if(player && moveFunction){
-                    moveFunction(player)
-                    checkForFruitsColision()
-                }
-                
-            }
-
-            function checkForFruitsColision() {
-                for(const playerId in objetos.players){
-                    const player = objetos.players[playerId]
-                    
-                    for(const fruitId in objetos.fruits) {
-                        const fruit = objetos.fruits[fruitId]
-                        console.log(`Cheking ${playerId} and ${fruitId}`)
-
-                        if(player.x === fruit.x && player.y === fruit.y){
-                            console.log(`Colision by ${playerId} and ${fruitId}`)
-                            game.deletefruit({fruitId: fruitId})
-                        }
-                    }
-                }
-            }
-
-            return {
-                movePlayer,
-                objetos,
-                addPlayer,
-                deletePlayer,
-                addFruits,
-                deletefruit
-            }
-        }
-
+        renderizar(screen, game, requestAnimationFrame)
         game.addPlayer({playerId: 'player1', playerx: 100, playery: 200})
         game.addFruits({fruitId: 'fruit1', fruitx: 300, fruity: 250})
-      
-        function renderizar() {
-
-            context.fillStyle = color
-            context.fillRect(posicaoX, posicaoY, width, height)
-
-            for(const playersId in game.objetos.players){
-                const player = game.objetos.players[playersId]
-                context.fillStyle = 'black'
-                context.fillRect(player.x, player.y, 10, 10)
-            }
-
-            for(const fruitsId in game.objetos.fruits) {
-                const fruit = game.objetos.fruits[fruitsId]
-                context.fillStyle = 'red'
-                context.fillRect(fruit.x, fruit.y, 10, 10)
-            }
-
-            requestAnimationFrame(renderizar)
-        }
 
     </script>
 </body>
