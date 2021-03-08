@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Game</title>
+    
+    <style>
+        #screen {
+            margin-top: 10px;
+            margin-left: 10px;
+            border-style: solid;
+            border-color: blue;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="screen" width="1300" height="550"></canvas>
+
+    <script type="module">
+
+        import createGame from './game.js'
+        import createKeyboardLitener from './keyboard-listener.js'
+        import renderizar from './render-screen.js'
+        
+
+        const screen = document.getElementById('screen')
+        
+        const posicaoX = 0
+        const posicaoY = 0
+        const width = 1300
+        const height = 550
+        const game = createGame()
+        const keyboardlistener = createKeyboardLitener(document)
+        keyboardlistener.subscribe(game.movePlayer)
+        const CurrentPlayer = 'player'
+        renderizar(screen, game, requestAnimationFrame)
+        game.addPlayer({playerId: 'player1', playerx: 100, playery: 200})
+        game.addFruits({fruitId: 'fruit1', fruitx: 300, fruity: 250})
+
+    </script>
+</body>
+</html>
